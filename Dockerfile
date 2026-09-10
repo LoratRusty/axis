@@ -1,14 +1,13 @@
 FROM php:8.2-cli
 
-# Instalar extensiones
 RUN apt-get update && apt-get install -y \
-    git curl zip unzip libzip-dev libicu-dev libgd-dev libpng-dev \
+    git curl zip unzip \
+    libzip-dev libicu-dev libgd-dev libpng-dev \
+    libonig-dev libxml2-dev \
     && docker-php-ext-install intl zip gd pdo pdo_mysql mbstring bcmath opcache
 
-# Instalar composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Instalar Node
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs
 
@@ -22,4 +21,4 @@ RUN mkdir -p storage/framework/{sessions,views,cache,testing} storage/logs boots
 
 EXPOSE 8080
 
-CMD php artisan migrate --force && php artisan config:cache && php artisan route:cache && php -S 0.0.0.0:$PORT -t public
+CMD ["sh", "-c", "php artisan migrate --force && php artisan config:cache && php artisan route:cache && php -S 0.0.0.0:$PORT -t public"]
