@@ -86,33 +86,24 @@ class InteraccionResource extends Resource
                         ->maxLength(255),
 
                     TextInput::make('client_account')
-                        ->label('Cuenta / Negocio')
+                        ->label('Contacto')
                         ->maxLength(255),
-
-                    Select::make('client_classification')
-                        ->label('Clasificacion de cuenta')
-                        ->options([
-                            'A' => 'Cuenta A',
-                            'B' => 'Cuenta B',
-                            'C' => 'Cuenta C',
-                        ]),
 
                     Select::make('visit_type')
                         ->label('Tipo de visita')
                         ->options([
-                            'prospecting'  => 'Prospectacion',
+                            'prospecting'  => 'Prospectación',
                             'discovery'    => 'Descubrimiento',
                             'proposal'     => 'Propuesta',
-                            'negotiation'  => 'Negociacion',
+                            'negotiation'  => 'Negociación',
                             'closing'      => 'Cierre',
-                            'follow_up'    => 'Seguimiento',
                         ])
                         ->required(),
 
-                    TextInput::make('spiced_doc_url')
-                        ->label('URL documento SPICED')
-                        ->url()
-                        ->placeholder('https://drive.google.com/...'),
+                    TextInput::make('opportunity_name')
+                        ->label('Oportunidad en CRM')
+                        ->maxLength(255)
+                        ->placeholder('Nombre de la oportunidad registrada en CRM'),
 
                     Textarea::make('notes')
                         ->label('Notas de la visita')
@@ -176,23 +167,21 @@ class InteraccionResource extends Resource
                             'proposal'    => 'Propuesta',
                             'negotiation' => 'Negociacion',
                             'closing'     => 'Cierre',
-                            'follow_up'   => 'Seguimiento',
                             default       => $state,
                         }),
                     \Filament\Infolists\Components\TextEntry::make('client_name')
                         ->label('Cliente'),
                     \Filament\Infolists\Components\TextEntry::make('client_account')
-                        ->label('Cuenta')
+                        ->label('Contacto')
                         ->placeholder('—'),
                     \Filament\Infolists\Components\TextEntry::make('is_valid')
                         ->label('Resultado')
                         ->badge()
                         ->formatStateUsing(fn($state) => $state ? 'Interaccion valida' : 'Interaccion no valida')
                         ->color(fn($state) => $state ? 'success' : 'danger'),
-                    \Filament\Infolists\Components\TextEntry::make('spiced_doc_url')
-                        ->label('Documento SPICED')
-                        ->placeholder('—')
-                        ->url(fn($state) => $state),
+                    \Filament\Infolists\Components\TextEntry::make('opportunity_name')
+                        ->label('Oportunidad en CRM')
+                        ->placeholder('—'),
                     \Filament\Infolists\Components\TextEntry::make('notes')
                         ->label('Notas')
                         ->placeholder('—')
@@ -231,7 +220,7 @@ class InteraccionResource extends Resource
 
         ]);
     }
-    
+
     public static function table(Table $table): Table
     {
         return $table
@@ -247,7 +236,12 @@ class InteraccionResource extends Resource
                     ->limit(30),
 
                 Tables\Columns\TextColumn::make('client_account')
-                    ->label('Cuenta')
+                    ->label('Contacto')
+                    ->limit(30)
+                    ->placeholder('-'),
+
+                Tables\Columns\TextColumn::make('opportunity_name')
+                    ->label('Oportunidad')
                     ->limit(30)
                     ->placeholder('-'),
 
@@ -255,15 +249,13 @@ class InteraccionResource extends Resource
                     ->label('Tipo')
                     ->badge()
                     ->formatStateUsing(fn($state) => match ($state) {
-                        'prospecting' => 'Prospectacion',
+                        'prospecting' => 'Prospección',
                         'discovery'   => 'Descubrimiento',
                         'proposal'    => 'Propuesta',
-                        'negotiation' => 'Negociacion',
+                        'negotiation' => 'Negociación',
                         'closing'     => 'Cierre',
-                        'follow_up'   => 'Seguimiento',
                         default       => $state,
-                    })
-                    ->color('primary'),
+                    }),
 
                 Tables\Columns\IconColumn::make('is_valid')
                     ->label('Valida')

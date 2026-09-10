@@ -18,7 +18,7 @@ class FieldInteraction extends Model
         'weekly_tracking_id',
         'client_name',
         'client_account',
-        'client_classification',
+        'opportunity_name',
         'leader_approval',
         'visit_date',
         'visit_type',
@@ -28,23 +28,30 @@ class FieldInteraction extends Model
         'crm_registered',
         'has_artifacts',
         'is_valid',
-        'spiced_doc_url',
         'notes',
     ];
 
     protected function casts(): array
     {
         return [
-            'visit_date' => 'date',
-            'is_in_matrix' => 'boolean',
-            'is_scheduled' => 'boolean',
+            'visit_date'    => 'date',
+            'is_in_matrix'  => 'boolean',
+            'is_scheduled'  => 'boolean',
             'is_presential' => 'boolean',
-            'crm_registered' => 'boolean',
+            'crm_registered'=> 'boolean',
             'has_artifacts' => 'boolean',
-            'is_valid' => 'boolean',
+            'is_valid'      => 'boolean',
             'leader_approval' => 'boolean',
         ];
     }
+
+    public static array $visitTypes = [
+        'prospecting'  => 'Prospección',
+        'discovery'    => 'Descubrimiento',
+        'proposal'     => 'Propuesta',
+        'negotiation'  => 'Negociación',
+        'closing'      => 'Cierre',
+    ];
 
     protected static function booted(): void
     {
@@ -86,17 +93,12 @@ class FieldInteraction extends Model
     {
         $missing = [];
 
-        if (!$this->is_in_matrix) $missing[] = 'El cliente debe figurar en la Matriz de Planificación';
-        if (!$this->is_scheduled) $missing[] = 'La cita debe ser agendada proactivamente';
-        if (!$this->is_presential) $missing[] = 'La interacción debe ser estrictamente presencial';
+        if (!$this->is_in_matrix)   $missing[] = 'El cliente debe figurar en la Matriz de Planificación';
+        if (!$this->is_scheduled)   $missing[] = 'La cita debe ser agendada proactivamente';
+        if (!$this->is_presential)  $missing[] = 'La interacción debe ser estrictamente presencial';
         if (!$this->crm_registered) $missing[] = 'Debe estar registrada en CRM antes del corte';
-        if (!$this->has_artifacts) $missing[] = 'Se requiere evidencia tangible de la cita';
+        if (!$this->has_artifacts)  $missing[] = 'Se requiere evidencia tangible de la cita';
 
         return $missing;
-    }
-
-    public function requiresLeaderApproval(): bool
-    {
-        return in_array($this->client_classification, ['A', 'B']);
     }
 }

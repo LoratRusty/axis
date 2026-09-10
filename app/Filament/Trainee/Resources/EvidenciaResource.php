@@ -116,7 +116,11 @@ class EvidenciaResource extends Resource
                         ->required()
                         ->searchable()
                         ->helperText('Selecciona el ritual al que corresponde esta evidencia.'),
-
+                    \Filament\Forms\Components\Select::make('self_assessment_score')
+                        ->label('¿Cómo te sentiste ejecutando este ritual? (1-10)')
+                        ->options(array_combine(range(1, 10), range(1, 10)))
+                        ->required()
+                        ->helperText('Esta calificación será usada en tus reuniones de seguimiento.'),
                 ])->columns(1),
 
         ]);
@@ -175,6 +179,10 @@ class EvidenciaResource extends Resource
                         ->placeholder('—')
                         ->url(fn($state) => $state)
                         ->columnSpanFull(),
+                    \Filament\Infolists\Components\TextEntry::make('self_assessment_score')
+                        ->label('Auto-evaluación')
+                        ->placeholder('—')
+                        ->suffix('/10'),
                 ])->columns(2),
 
             \Filament\Schemas\Components\Section::make('Revision del coach')
@@ -240,7 +248,10 @@ class EvidenciaResource extends Resource
                     ->label('Comentario del coach')
                     ->limit(50)
                     ->placeholder('-'),
-
+                Tables\Columns\TextColumn::make('self_assessment_score')
+                    ->label('Auto-eval.')
+                    ->suffix('/10')
+                    ->placeholder('-'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Subida el')
                     ->date('d/m/Y'),

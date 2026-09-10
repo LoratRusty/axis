@@ -71,6 +71,11 @@ class Evaluation extends Model
         return $this->belongsTo(Ritual::class);
     }
 
+    public function ritualScores()
+    {
+        return $this->hasMany(EvaluationRitualScore::class);
+    }
+
     // Scopes
     public function scopeByInstrument($query, string $instrument)
     {

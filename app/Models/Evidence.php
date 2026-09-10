@@ -29,6 +29,7 @@ class Evidence extends Model
         'file_size_kb',
         'status',
         'coach_notes',
+        'self_assessment_score',
         'reviewed_by',
         'reviewed_at',
     ];
@@ -36,7 +37,8 @@ class Evidence extends Model
     protected function casts(): array
     {
         return [
-            'reviewed_at' => 'datetime',
+            'reviewed_at'           => 'datetime',
+            'self_assessment_score' => 'integer',
         ];
     }
 

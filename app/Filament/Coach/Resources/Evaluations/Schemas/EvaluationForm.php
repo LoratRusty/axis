@@ -10,6 +10,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\Repeater;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
@@ -19,7 +20,7 @@ class EvaluationForm
     {
         return $schema->components([
 
-            Section::make('Identificacion')
+            Section::make('Identificación')
                 ->schema([
                     Select::make('program_id')
                         ->label('Trainee')
@@ -34,87 +35,87 @@ class EvaluationForm
                         ->searchable()
                         ->live(),
 
-                    Select::make('ritual_id')
-                        ->label('Ritual evaluado')
-                        ->options(fn() => Ritual::active()
-                            ->orderBy('number')
-                            ->get()
-                            ->mapWithKeys(fn($r) => [$r->id => $r->number . '. ' . $r->name])
-                        )
-                        ->searchable(),
+                    Select::make('weekly_tracking_id')
+                        ->label('Semana a evaluar')
+                        ->options(function (callable $get) {
+                            $programId = $get('program_id');
+                            if (! $programId) return [];
+                            return WeeklyTracking::where('program_id', $programId)
+                                ->orderByDesc('week_number')
+                                ->get()
+                                ->mapWithKeys(fn($wt) => [
+                                    $wt->id => 'Semana ' . $wt->week_number . ' (' . ($wt->week_start_date?->format('d/m/Y') ?? '-') . ')',
+                                ]);
+                        })
+                        ->required()
+                        ->searchable()
+                        ->live(),
 
                     Select::make('instrument')
                         ->label('Instrumento')
                         ->options([
-                            'I1' => 'I1 - Matriz de Planificacion',
-                            'I2' => 'I2 - Interaccion de Campo',
+                            'I1' => 'I1 - Matriz de Planificación',
+                            'I2' => 'I2 - Interacción de Campo',
                             'I3' => 'I3 - Documento SPICED',
                             'I4' => 'I4 - Acuerdo Mutuo',
-                            'I5' => 'I5 - Evidencia Fisica',
-                            'I6' => 'I6 - Rubrica de Evaluacion',
+                            'I5' => 'I5 - Evidencia Física',
+                            'I6' => 'I6 - Rúbrica de Evaluación',
                         ])
                         ->required(),
 
                     DateTimePicker::make('evaluated_at')
-                        ->label('Fecha de evaluacion')
+                        ->label('Fecha de evaluación')
                         ->default(now()),
 
                 ])->columns(2),
 
-            Section::make('Resultados')
+            Section::make('Calificación por Ritual')
+                ->description('Selecciona la semana primero. Se mostrarán los rituales correspondientes para calificar del 1 al 10.')
                 ->schema([
-                    Select::make('evidence_status')
-                        ->label('Estado de la evidencia')
-                        ->options([
-                            'active'   => 'Activa',
-                            'partial'  => 'Parcial',
-                            'inactive' => 'Inactiva',
-                        ]),
+                    Repeater::make('ritualScores')
+                        ->label('')
+                        ->relationship('ritualScores')
+                        ->schema([
+                            Select::make('ritual_id')
+                                ->label('Ritual')
+                                ->options(function (callable $get) {
+                                    $weeklyTrackingId = $get('../../weekly_tracking_id');
+                                    $programId = $get('../../program_id');
 
-                    Select::make('frequency_level')
-                        ->label('Nivel de frecuencia')
-                        ->options([
-                            'high'         => 'Alto',
-                            'moderate'     => 'Moderado',
-                            'low'          => 'Bajo',
-                            'non_existent' => 'No existe',
-                        ]),
+                                    if (! $programId) return [];
 
-                    TextInput::make('frequency_pct')
-                        ->label('Frecuencia (%)')
-                        ->numeric()
-                        ->suffix('%'),
+                                    $program = TrainingProgram::find($programId);
+                                    if (! $program) return [];
 
-                    TextInput::make('quality_level')
-                        ->label('Nivel de calidad (1-4)')
-                        ->numeric()
-                        ->minValue(1)
-                        ->maxValue(4),
+                                    return Ritual::active()
+                                        ->whereHas('phase', fn($q) => $q->where('code', $program->current_stage))
+                                        ->orderBy('number')
+                                        ->get()
+                                        ->mapWithKeys(fn($r) => [$r->id => $r->number . '. ' . $r->name]);
+                                })
+                                ->required()
+                                ->searchable()
+                                ->distinct()
+                                ->disableOptionsWhenSelectedInSiblingRepeaterItems(),
 
-                    TextInput::make('overall_score')
-                        ->label('Puntaje general')
-                        ->numeric(),
+                            Select::make('score')
+                                ->label('Calificación (1-10)')
+                                ->options(array_combine(range(1, 10), range(1, 10)))
+                                ->required(),
 
-                    Select::make('dimension_focus')
-                        ->label('Dimension de optimizacion')
-                        ->options([
-                            'volume'  => 'Volumen',
-                            'time'    => 'Tiempo',
-                            'quality' => 'Calidad',
-                            'cost'    => 'Costo',
-                        ]),
+                            Textarea::make('notes')
+                                ->label('Notas a mejorar')
+                                ->rows(2)
+                                ->columnSpanFull(),
+                        ])
+                        ->columns(2)
+                        ->addActionLabel('Agregar ritual')
+                        ->defaultItems(0)
+                        ->columnSpanFull(),
 
-                    Toggle::make('field_observed')
-                        ->label('Observado en campo')
-                        ->inline(false),
+                ])->columns(1),
 
-                    Toggle::make('advance_to_next')
-                        ->label('Listo para avanzar al siguiente proceso')
-                        ->inline(false),
-
-                ])->columns(2),
-
-            Section::make('Notas de evaluacion')
+            Section::make('Notas generales de la evaluación')
                 ->schema([
                     Textarea::make('strengths')
                         ->label('Fortalezas observadas')
@@ -127,17 +128,7 @@ class EvaluationForm
                         ->columnSpanFull(),
 
                     Textarea::make('improvement_action')
-                        ->label('Accion de mejora')
-                        ->rows(3)
-                        ->columnSpanFull(),
-
-                    Textarea::make('field_notes')
-                        ->label('Notas de campo')
-                        ->rows(3)
-                        ->columnSpanFull(),
-
-                    Textarea::make('next_cycle_focus')
-                        ->label('Foco del proximo ciclo')
+                        ->label('Acción de mejora')
                         ->rows(3)
                         ->columnSpanFull(),
 
@@ -145,6 +136,10 @@ class EvaluationForm
                         ->label('Notas adicionales')
                         ->rows(3)
                         ->columnSpanFull(),
+
+                    Toggle::make('advance_to_next')
+                        ->label('Listo para avanzar al siguiente proceso')
+                        ->inline(false),
 
                 ])->columns(1),
 

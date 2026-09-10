@@ -32,6 +32,7 @@ class FieldInteractionForm
                         ->required()
                         ->searchable()
                         ->live(),
+
                     Select::make('weekly_tracking_id')
                         ->label('Semana')
                         ->options(function (callable $get) {
@@ -46,35 +47,36 @@ class FieldInteractionForm
                         })
                         ->required()
                         ->searchable(),
+
                     DatePicker::make('visit_date')
                         ->label('Fecha de la visita')
                         ->required()
                         ->maxDate(now()),
 
                     TextInput::make('client_name')
-                        ->label('Nombre del cliente')
+                        ->label('Cliente')
                         ->required()
                         ->maxLength(255),
 
                     TextInput::make('client_account')
-                        ->label('Cuenta / Negocio')
+                        ->label('Contacto')
                         ->maxLength(255),
 
                     Select::make('visit_type')
                         ->label('Tipo de visita')
                         ->options([
-                            'prospecting'  => 'Prospectacion',
+                            'prospecting'  => 'Prospección',
                             'discovery'    => 'Descubrimiento',
                             'proposal'     => 'Propuesta',
-                            'negotiation'  => 'Negociacion',
+                            'negotiation'  => 'Negociación',
                             'closing'      => 'Cierre',
-                            'follow_up'    => 'Seguimiento',
                         ])
                         ->required(),
 
-                    TextInput::make('spiced_doc_url')
-                        ->label('URL documento SPICED')
-                        ->url(),
+                    TextInput::make('opportunity_name')
+                        ->label('Oportunidad en CRM')
+                        ->maxLength(255)
+                        ->placeholder('Nombre de la oportunidad registrada en CRM'),
 
                     Textarea::make('notes')
                         ->label('Notas')
@@ -83,10 +85,10 @@ class FieldInteractionForm
 
                 ])->columns(2),
 
-            Section::make('Validacion - Las 5 Normas')
+            Section::make('Validación - Las 5 Normas')
                 ->schema([
                     Toggle::make('is_in_matrix')
-                        ->label('Cliente en matriz de planificacion')
+                        ->label('Cliente en matriz de planificación')
                         ->inline(false),
                     Toggle::make('is_scheduled')
                         ->label('Visita agendada proactivamente')
@@ -98,7 +100,7 @@ class FieldInteractionForm
                         ->label('Registrada en CRM')
                         ->inline(false),
                     Toggle::make('has_artifacts')
-                        ->label('Cuenta con evidencias fisicas')
+                        ->label('Cuenta con evidencias físicas')
                         ->inline(false),
                 ])->columns(2),
 

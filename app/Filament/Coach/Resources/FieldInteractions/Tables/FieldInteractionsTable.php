@@ -20,25 +20,36 @@ class FieldInteractionsTable
                     ->label('Trainee')
                     ->searchable()
                     ->sortable(),
+
                 TextColumn::make('client_name')
                     ->label('Cliente')
                     ->searchable(),
+
+                TextColumn::make('client_account')
+                    ->label('Contacto')
+                    ->placeholder('-'),
+
+                TextColumn::make('opportunity_name')
+                    ->label('Oportunidad')
+                    ->placeholder('-'),
+
                 TextColumn::make('visit_date')
                     ->label('Fecha de visita')
                     ->date('d/m/Y')
                     ->sortable(),
+
                 TextColumn::make('visit_type')
                     ->label('Tipo')
                     ->badge()
-                    ->formatStateUsing(fn (string $state): string => match($state) {
+                    ->formatStateUsing(fn(string $state): string => match ($state) {
                         'prospecting' => 'Prospección',
                         'discovery'   => 'Descubrimiento',
                         'proposal'    => 'Propuesta',
                         'negotiation' => 'Negociación',
                         'closing'     => 'Cierre',
-                        'follow_up'   => 'Seguimiento',
                         default       => $state,
                     }),
+
                 IconColumn::make('is_valid')
                     ->label('Válida')
                     ->boolean(),
