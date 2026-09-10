@@ -1,1 +1,1 @@
-web: install-php-extensions intl zip gd && php artisan migrate --force && php -S 0.0.0.0:$PORT -t public
+web: install-php-extensions intl zip gd && composer install --optimize-autoloader --no-scripts --no-interaction --ignore-platform-req=ext-intl --ignore-platform-req=ext-zip --ignore-platform-req=ext-gd && php artisan migrate --force && php -S 0.0.0.0:$PORT -t public
