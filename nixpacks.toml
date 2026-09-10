@@ -1,19 +1,31 @@
-[phases.setup]
-nixPkgs = ["php82", "php82Extensions.pdo", "php82Extensions.pdo_mysql", "php82Extensions.mbstring", "php82Extensions.tokenizer", "php82Extensions.xml", "php82Extensions.ctype", "php82Extensions.fileinfo", "php82Extensions.bcmath", "php82Extensions.curl", "php82Extensions.zip", "nodejs_20", "npm-9_x"]
+npm warn config production Use `--omit=dev` instead.
 
-[phases.install]
-cmds = [
-    "php composer.phar install --no-dev --optimize-autoloader",
-    "npm install",
-    "npm run build"
-]
+composer install --optimize-autoloader --no-scripts --no-interaction
+804ms
+Composer plugins have been disabled for safety in this non-interactive session.
+Set COMPOSER_ALLOW_SUPERUSER=1 if you want to allow plugins to run as root/super user.
+Do not run Composer as root/super user! See https://getcomposer.org/root for details
+Installing dependencies from lock file (including require-dev)
+Verifying lock file contents can be installed on current platform.
+Your lock file does not contain a compatible set of packages. Please run composer update.
 
-[phases.build]
-cmds = [
-    "php artisan config:cache",
-    "php artisan route:cache",
-    "php artisan view:cache"
-]
-
-[start]
-cmd = "php artisan migrate --force && php artisan db:seed --force && php -S 0.0.0.0:$PORT -t public"
+  Problem 1
+    - filament/support is locked to version v5.7.4 and an update of this package was not requested.
+    - filament/support v5.7.4 requires ext-intl * -> it is missing from your system. Install or enable PHP's intl extension.
+  Problem 2
+    - openspout/openspout is locked to version v4.28.5 and an update of this package was not requested.
+    - openspout/openspout v4.28.5 requires ext-zip * -> it is missing from your system. Install or enable PHP's zip extension.
+  Problem 3
+    - phpoffice/phpspreadsheet is locked to version 1.30.6 and an update of this package was not requested.
+    - phpoffice/phpspreadsheet 1.30.6 requires ext-gd * -> it is missing from your system. Install or enable PHP's gd extension.
+  Problem 4
+    - filament/query-builder is locked to version v5.7.4 and an update of this package was not requested.
+    - filament/query-builder v5.7.4 requires filament/support v5.7.4 -> satisfiable by filament/support[v5.7.4].
+    - filament/support v5.7.4 requires ext-intl * -> it is missing from your system. Install or enable PHP's intl extension.
+To enable extensions, verify that they are enabled in your .ini files:
+    - /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
+    - /usr/local/etc/php/conf.d/docker-php-ext-sodium.ini
+    - /usr/local/etc/php/conf.d/php.ini
+You can also run `php --ini` in a terminal to see which files are used by PHP in CLI mode.
+Alternatively, you can run Composer with `--ignore-platform-req=ext-intl --ignore-platform-req=ext-zip --ignore-platform-req=ext-gd` to temporarily ignore these required extensions.
+Build Failed: build daemon returned an error < failed to solve: process "composer install --optimize-autoloader --no-scripts --no-interaction" did not complete successfully: exit code: 2 >
