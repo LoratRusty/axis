@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::table('field_interactions', function (Blueprint $table) {
             $table->enum('client_classification', ['A', 'B', 'C'])
                   ->nullable()
-                  ->after('client_accoFieldInteractionunt');
+                  ->after('client_account');
             $table->boolean('leader_approval')
                   ->default(false)
                   ->after('client_classification');
