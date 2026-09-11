@@ -49,11 +49,23 @@ class CreateEvidencia extends Page
 
         $program = Auth::user()->trainingProgram;
 
+        $weeklyTracking = WeeklyTracking::find($this->weekly_tracking_id);
+        $weekNumber = $weeklyTracking?->week_number ?? 1;
+
+        // Rituales desbloqueados según la semana
+        $ritualesDesbloqueados = match (true) {
+            $weekNumber <= 2  => [1, 2, 3, 4, 5, 6, 7, 8],
+            $weekNumber <= 4  => [1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 13, 14, 15, 22],
+            $weekNumber <= 6  => [1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 13, 14, 15, 16, 17, 18, 19, 20, 22],
+            $weekNumber <= 8  => [1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28],
+            default           => range(1, 28),
+        };
+
         $rituales = Ritual::where('is_active', true)
+            ->whereIn('number', $ritualesDesbloqueados)
             ->orderBy('number')
             ->get();
 
-        // Pre-cargar scores existentes para esta semana
         $existing = TraineeRitualScore::where('weekly_tracking_id', $this->weekly_tracking_id)
             ->where('program_id', $program->id)
             ->pluck('score', 'ritual_id');
