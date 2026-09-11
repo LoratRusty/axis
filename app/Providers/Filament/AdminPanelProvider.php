@@ -28,6 +28,9 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->brandName('AXIS')
+            ->brandLogo(asset('images/logo.png'))
+            ->brandLogoHeight('2.5rem')
             ->colors([
                 'primary' => Color::hex('#1B2F6E'),
             ])

@@ -13,7 +13,7 @@ class ListEvidencias extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make()->label('Nueva evidencia'),
+            Actions\CreateAction::make()->label('Calificar rituales de la semana'),
         ];
     }
 }

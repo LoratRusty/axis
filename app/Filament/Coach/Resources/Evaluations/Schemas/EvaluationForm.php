@@ -24,12 +24,13 @@ class EvaluationForm
                 ->schema([
                     Select::make('program_id')
                         ->label('Trainee')
-                        ->options(fn() => TrainingProgram::with('trainee')
-                            ->active()
-                            ->get()
-                            ->mapWithKeys(fn($p) => [
-                                $p->id => $p->trainee->name . ' - Sem. ' . $p->current_week,
-                            ])
+                        ->options(
+                            fn() => TrainingProgram::with('trainee')
+                                ->active()
+                                ->get()
+                                ->mapWithKeys(fn($p) => [
+                                    $p->id => $p->trainee->name . ' - Sem. ' . $p->current_week,
+                                ])
                         )
                         ->required()
                         ->searchable()
@@ -56,9 +57,6 @@ class EvaluationForm
                         ->options([
                             'I1' => 'I1 - Matriz de Planificación',
                             'I2' => 'I2 - Interacción de Campo',
-                            'I3' => 'I3 - Documento SPICED',
-                            'I4' => 'I4 - Acuerdo Mutuo',
-                            'I5' => 'I5 - Evidencia Física',
                             'I6' => 'I6 - Rúbrica de Evaluación',
                         ])
                         ->required(),

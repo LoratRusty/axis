@@ -26,10 +26,12 @@ class TraineePanelProvider extends PanelProvider
             ->id('trainee')
             ->path('mi-programa')
             ->login()
+            ->brandName('AXIS - Mi Programa')
+            ->brandLogo(asset('images/logo.png'))
+            ->brandLogoHeight('2.5rem')
             ->colors([
                 'primary' => Color::hex('#1B2F6E'),
             ])
-            ->brandName('AXIS - Mi Programa')
             ->discoverResources(in: app_path('Filament/Trainee/Resources'), for: 'App\Filament\Trainee\Resources')
             ->discoverPages(in: app_path('Filament/Trainee/Pages'), for: 'App\Filament\Trainee\Pages')
             ->pages([

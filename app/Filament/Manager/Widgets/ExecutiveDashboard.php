@@ -17,7 +17,7 @@ class ExecutiveDashboard extends StatsOverviewWidget
         $enRiesgo     = TrainingProgram::where('status', 'active')
             ->whereHas('weeklyTrackings', function ($q) {
                 $q->where('status', 'in_progress')
-                  ->where('actual_interactions', 0);
+                    ->where('actual_interactions', 0);
             })->count();
 
         $porFase = TrainingProgram::where('status', 'active')
@@ -51,16 +51,6 @@ class ExecutiveDashboard extends StatsOverviewWidget
             Stat::make('Próximos a ascenso', $proximosAscenso)
                 ->description('En sub-rol Negociador')
                 ->color('info'),
-
-            Stat::make('Por fase', implode(' | ', [
-                'A:' . ($porFase['A'] ?? 0),
-                'B:' . ($porFase['B'] ?? 0),
-                'C:' . ($porFase['C'] ?? 0),
-                'D:' . ($porFase['D'] ?? 0),
-                'E:' . ($porFase['E'] ?? 0),
-            ]))
-                ->description('Distribución del equipo por fase')
-                ->color('gray'),
         ];
     }
 }

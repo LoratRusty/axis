@@ -24,16 +24,16 @@ class TrayectoriaSubrolesWidget extends Widget
 
         $subroles = [
             'A' => [
-                ['clave' => 'Explorador',    'semana_min' => 1,  'semana_max' => 4],
-                ['clave' => 'Descubridor',   'semana_min' => 5,  'semana_max' => 9],
-                ['clave' => 'Articulador',   'semana_min' => 10, 'semana_max' => 16],
+                ['clave' => 'Vendedor Novato',    'semana_min' => 1,  'semana_max' => 4],
+                ['clave' => 'Vendedor Aprendiz',   'semana_min' => 5,  'semana_max' => 9],
+                ['clave' => 'Vendedor Practicante',   'semana_min' => 10, 'semana_max' => 16],
             ],
             'B' => [
-                ['clave' => 'Negociador',    'semana_min' => 17, 'semana_max' => 20],
-                ['clave' => 'Desarrollador', 'semana_min' => 21, 'semana_max' => 24],
+                ['clave' => 'Vendedor Intermedio',    'semana_min' => 17, 'semana_max' => 20],
+                ['clave' => 'Vendedor Avanzado', 'semana_min' => 21, 'semana_max' => 24],
             ],
             'C' => [
-                ['clave' => 'Integrador',    'semana_min' => 25, 'semana_max' => 28],
+                ['clave' => 'Vendedor',    'semana_min' => 25, 'semana_max' => 28],
             ],
         ];
 
