@@ -1,4 +1,4 @@
-# AXIS — Adaptive eXperience & Intelligence System
+# AXIS - Adaptive eXperience & Intelligence System
 
 Plataforma comercial de entrenamiento para vendedores, construida para **Advance**.  
 Digitaliza el proceso estructurado de capacitación basado en *Los 9 Pasos de la Venta Advance* y la fórmula pedagógica **HERRAMIENTA + Hábito + Habilidad = Capacidad Comercial**.
@@ -96,12 +96,12 @@ npm run build
 
 Abre **dos terminales** en PowerShell:
 
-**Terminal 1 — Servidor Laravel:**
+**Terminal 1 - Servidor Laravel:**
 ```powershell
 php artisan serve
 ```
 
-**Terminal 2 — (Opcional) Túnel Cloudflare:**
+**Terminal 2 - (Opcional) Túnel Cloudflare:**
 ```powershell
 cloudflared tunnel run axis
 ```
@@ -130,11 +130,11 @@ Los roles se asignan desde el panel Admin.
 
 ## Notas de entorno (Windows / XAMPP)
 
-- El PATH de PHP debe apuntar a `C:\xampp-actual-v2\php` (no a una versión anterior).
+- El PATH de PHP debe apuntar a `C:\xampp\php` (no a una versión anterior).
 - Composer se ejecuta como `php composer.phar`, no como comando global.
 - El driver de sesión debe ser `file` para evitar problemas con sesiones en XAMPP.
 - Si el proyecto está detrás de HTTPS via Cloudflare Tunnel, el esquema de URL se fuerza en `AppServiceProvider`.
-
+Nota: Todo depende de la configuración de tu entorno.
 ---
 
 ## Comandos útiles
